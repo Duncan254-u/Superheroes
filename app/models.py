@@ -15,3 +15,39 @@ class Hero(db.model):
             "description": self.description
 
         }
+
+        def validate(self):
+            errors = []
+            if not self.description or len(self.description) < 20:
+                errors.append("Description must be at least 20 characters long.")
+                return errors
+            
+class HeroPower(db.model):
+    __tablename__ = 'hero_powers'
+    id = db.Column(db.Integer, primary_key=True)
+    strength = db.Column(db.String(50), nullable=False)
+    hero_id = db.Column(db.Integer, db.ForeignKey('heroes.id'), nullable=False)
+    power_id = db.Column(db.Integer, db.ForeignKey('powers.id'), nullable=False)
+
+    hero = db.relationship('Hero', back_populates='hero_powers')
+    power = db.relationship('Power', back_populates='hero_powers')
+
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "strength": self.strength,
+            "hero_id": self.hero_id,
+            "power_id": self.power_id,
+            "hero": {
+                "id": self.hero.id,
+                "super_name": self.hero.super_name,
+
+            },
+            "power": self.power.to_dict()
+        }
+    
+    def validate(self):
+        if self.strenghth not in ['strong', 'weak', 'average']:
+            return ["Strength must be one of: strong, weak, average."]
+        return []
