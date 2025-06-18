@@ -1,10 +1,9 @@
 from app import db
-
-class Hero(db.model):
+class Hero(db.Model):
     __tabllename__ = 'heroes'
-    id = db.column(db.Integer, primary_key=True)
-    name = db.column(db.String(50), nullable=False)
-    super_name = db.column(db.String)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    super_name = db.Column(db.String)
 
     hero_powers = db.relationship('HeroPower', back_populates='hero', cascade='all, delete-orphan')
 
@@ -22,7 +21,7 @@ class Hero(db.model):
                 errors.append("Description must be at least 20 characters long.")
                 return errors
             
-class HeroPower(db.model):
+class HeroPower(db.Model):
     __tablename__ = 'hero_powers'
     id = db.Column(db.Integer, primary_key=True)
     strength = db.Column(db.String(50), nullable=False)
